@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
+import androidx.work.WorkInfo
 import com.indialone.workmanagerlearnfull.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -42,6 +43,19 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        blurViewModel.progressWorkInfoItems.observe(this) { listOfWorkInfos ->
+            if (listOfWorkInfos.isNullOrEmpty())
+                return@observe
+
+            listOfWorkInfos.forEach { workInfo ->
+                if (WorkInfo.State.RUNNING == workInfo.state) {
+                    val progress = workInfo.progress.getInt(Constants.PROGRESS, 0)
+                    mBinding.progressBar.progress = progress
+                }
+            }
+
+        }
+
         mBinding.seeFileButton.setOnClickListener {
             blurViewModel.outputUri?.let { uri ->
                 val actionView = Intent(Intent.ACTION_VIEW, uri)
@@ -69,6 +83,7 @@ class MainActivity : AppCompatActivity() {
             progressBar.visibility = View.GONE
             cancelButton.visibility = View.GONE
             goButton.visibility = View.VISIBLE
+            progressBar.progress = 0
         }
     }
 

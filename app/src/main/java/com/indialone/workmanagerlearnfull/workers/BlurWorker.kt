@@ -22,7 +22,12 @@ class BlurWorker(
         val resourceUri = inputData.getString(Constants.KEY_IMAGE_URI)
         makeStatusNotification("Blurring image", appContext)
 
-        sleep()
+//        sleep()
+
+        (0..100 step 10).forEach {
+            setProgressAsync(workDataOf(Constants.PROGRESS to it))
+            sleep()
+        }
 
         return try {
             /*

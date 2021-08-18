@@ -40,7 +40,7 @@ class SaveImageToFileWorker(
 
             if (!imageUrl.isNullOrEmpty()) {
                 val output = workDataOf(Constants.KEY_IMAGE_URI to imageUrl)
-                Result.success()
+                Result.success(output)
             } else {
                 Log.d("saveimagetofileworker", "Saving image is failed")
                 Result.failure()

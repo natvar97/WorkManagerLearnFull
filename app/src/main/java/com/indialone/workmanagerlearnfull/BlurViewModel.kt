@@ -18,12 +18,14 @@ class BlurViewModel(application: Application) : ViewModel() {
     internal var imageUri: Uri? = null
     internal var outputUri: Uri? = null
     internal val outputWorkInfos: LiveData<List<WorkInfo>>
+    internal val progressWorkInfoItems: LiveData<List<WorkInfo>>
 
     private val workManager = WorkManager.getInstance(application)
 
     init {
         imageUri = getImageUri(application.applicationContext)
         outputWorkInfos = workManager.getWorkInfosByTagLiveData(Constants.TAG_OUTPUT)
+        progressWorkInfoItems = workManager.getWorkInfosByTagLiveData(Constants.TAG_PROGRESS)
     }
 
     internal fun applyBlur(blurLevel: Int) {
@@ -61,6 +63,7 @@ class BlurViewModel(application: Application) : ViewModel() {
         continuation = continuation.then(blurRequest)
 
          */
+
         val save = OneTimeWorkRequest
             .Builder(SaveImageToFileWorker::class.java)
 //            .setConstraints(constraints)
@@ -71,7 +74,7 @@ class BlurViewModel(application: Application) : ViewModel() {
 //        workManager.enqueue(blurRequest)
     }
 
-    internal fun cancelWork(){
+    internal fun cancelWork() {
         workManager.cancelUniqueWork(Constants.IMAGE_MANIPULATION_WORK_NAME)
     }
 
